@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Proptypes from 'prop-types';
 import bookImg from './img/book.jpg';
 import Button from './components/button';
+import ChessBoard from './components/chessBoard';
 
 // Constants
 const LOCS = {
@@ -46,6 +47,7 @@ function GncComponent(props) {
 
    return (
       <div>
+         <ChessBoard fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" />
          <div
             key="main-container"
             style={{
