@@ -1,10 +1,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import GncComponent from '.';
+import ChessBoard from '.';
 
 describe('Main Feature', () => {
    it('renders Good', () => {
-      const component = renderer.create(<GncComponent />);
+      const component = renderer.create(<ChessBoard />);
       expect(component.toJSON).toMatchSnapshot();
    });
 });

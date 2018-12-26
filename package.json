@@ -1,5 +1,5 @@
 {
-   "name": "gnc-component",
+   "name": "gnc-chess",
    "version": "1.2.3",
    "description": "Template for React Components",
    "main": "./lib/index.js",
@@ -15,7 +15,7 @@
    },
    "repository": {
       "type": "git",
-      "url": "git+https://github.com/GenDecoder/gnc-component.git"
+      "url": "git+https://github.com/GenDecoder/gnc-chess.git"
    },
    "keywords": [
       "React",
@@ -24,9 +24,9 @@
    "author": "Mario Victor Medrano Maldonado",
    "license": "MIT",
    "bugs": {
-      "url": "https://github.com/GenDecoder/gnc-component/issues"
+      "url": "https://github.com/GenDecoder/gnc-chess/issues"
    },
-   "homepage": "https://github.com/GenDecoder/gnc-component#readme",
+   "homepage": "https://github.com/GenDecoder/gnc-chess#readme",
    "devDependencies": {
       "babel-cli": "^6.26.0",
       "babel-core": "^6.26.0",
@@ -65,6 +65,8 @@
       "webpack-dev-server": "^3.1.10"
    },
    "dependencies": {
+      "aphrodite": "^2.2.3",
+      "chess.js": "^0.10.2",
       "prop-types": "^15.6.2",
       "react": "^16.7.0-alpha.0",
       "react-dom": "^16.7.0-alpha.0"
