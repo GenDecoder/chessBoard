@@ -1,9 +1,16 @@
-import { css } from 'aphrodite';
+// import { css } from 'aphrodite';
 import PropTypes from 'prop-types';
 import React, { Fragment, useState } from 'react';
 
 import { ALGEBRAIC_COLUMN_NAMES, ALGEBRAIC_ROW_NAMES } from './constants';
-import { getPieceCode, invertString, isWhitePerspective } from './utils';
+import {
+   getCellName,
+   getInvertedString,
+   getPieceCode,
+   getRowName,
+   getUIFen,
+   isWhitePerspective
+} from './utils';
 import Button from './components/button';
 import NotationBar from './components/notation-bar';
 
@@ -23,7 +30,7 @@ function ChessBoard(props) {
    const { fen, marks, perspective } = props;
    const [localPerspective, setLocalPerspective] = useState(perspective);
    const viewAsWhite = isWhitePerspective(localPerspective);
-   const uiFen = viewAsWhite ? fen : invertString(fen);
+   const uiFen = viewAsWhite ? getUIFen(fen) : getInvertedString(getUIFen(fen));
    const rows = uiFen.split('/');
    console.log(marks);
 
@@ -39,22 +46,22 @@ function ChessBoard(props) {
 
          <div
             style={{
-               height: 300,
-               width: 300,
-               padding: (300 / 100) * 5,
+               height: 150,
+               width: 150,
+               padding: (150 / 100) * 5,
                backgroundColor: '#582006',
                position: 'relative',
                borderRadius: 10
             }}
          >
             <NotationBar
-               anchor={(300 / 100) * 5}
+               anchor={(150 / 100) * 5}
                direction="v"
                list={ALGEBRAIC_ROW_NAMES}
                perspective={localPerspective}
             />
             <NotationBar
-               anchor={(300 / 100) * 5}
+               anchor={(150 / 100) * 5}
                direction="h"
                list={ALGEBRAIC_COLUMN_NAMES}
                perspective={localPerspective}
@@ -67,17 +74,10 @@ function ChessBoard(props) {
                }}
             >
                {rows.map((row, i) => {
-                  const cells = row
-                     .split('')
-                     .reduce(
-                        (total, value) =>
-                           total +
-                           (Number.isInteger(Number(value)) ? '0'.repeat(Number(value)) : value),
-                        ''
-                     )
-                     .split('');
+                  const cells = row.split('');
                   return (
                      <div
+                        key={getRowName(i)}
                         style={{
                            display: 'flex',
                            height: '12.5%'
@@ -87,6 +87,7 @@ function ChessBoard(props) {
                            const isWhite = (i + j) % 2 === 0;
                            return (
                               <div
+                                 key={getCellName(i, j)}
                                  style={{
                                     flex: 1,
                                     display: 'flex',
@@ -98,7 +99,7 @@ function ChessBoard(props) {
                                  <span
                                     style={{
                                        cursor: 'pointer',
-                                       fontSize: '200%',
+                                       fontSize: '100%',
                                        userSelect: 'none'
                                     }}
                                  >
@@ -125,7 +126,7 @@ ChessBoard.propTypes = {
       })
    ),
    // move: PropTypes.func,
-   perspective: PropTypes.oneOf('w', 'b')
+   perspective: PropTypes.oneOf(['w', 'b'])
 };
 ChessBoard.defaultProps = {
    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',

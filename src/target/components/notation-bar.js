@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { invertArray, isVertical, isWhitePerspective } from '../utils';
+import { getInvertedArray, isVertical, isWhitePerspective } from '../utils';
 
 function getContainerStyle(anchor, direction) {
    return isVertical(direction)
@@ -19,8 +19,8 @@ const NotationBar = props => {
             className={css(styles.innerContainer)}
             style={{ flexDirection: isVertical(direction) ? 'column' : 'row' }}
          >
-            {(isWhitePerspective(perspective) ? list : invertArray(list)).map(item => (
-               <div className={css(styles.itemContainer)}>
+            {(isWhitePerspective(perspective) ? list : getInvertedArray(list)).map(item => (
+               <div className={css(styles.itemContainer)} key={item}>
                   <span className={css(styles.itemText)}>{item}</span>
                </div>
             ))}
@@ -31,9 +31,9 @@ const NotationBar = props => {
 
 NotationBar.propTypes = {
    anchor: PropTypes.number,
-   direction: PropTypes.oneOf('h', 'v'),
-   list: PropTypes.arrayOf(PropTypes.string),
-   perspective: PropTypes.oneOf('w', 'b')
+   direction: PropTypes.oneOf(['h', 'v']),
+   list: PropTypes.instanceOf(Array),
+   perspective: PropTypes.oneOf(['w', 'b'])
 };
 NotationBar.defaultProps = {
    anchor: 30,

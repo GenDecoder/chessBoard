@@ -37,13 +37,33 @@ export function isVertical(direction) {
    return direction === 'v';
 }
 
-export function invertString(str) {
+export function getColumnName(index) {
+   return { 0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h' }[index];
+}
+
+export function getRowName(index) {
+   return String(index + 1);
+}
+
+export function getCellName(x, y) {
+   return getColumnName(x) + getRowName(y);
+}
+
+export function getInvertedString(str) {
    return str
       .split('')
       .reverse()
       .join('');
 }
 
-export function invertArray(array) {
+export function getInvertedArray(array) {
    return array.slice().reverse();
+}
+
+export function getUIFen(str) {
+   return str.split('').reduce(
+      (reulst, value) =>
+         reulst + (Number.isInteger(Number(value)) ? '0'.repeat(Number(value)) : value), // Convert numbers to zeros. Zeros represent empty cells.
+      ''
+   );
 }
