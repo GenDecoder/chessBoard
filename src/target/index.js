@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React, { Fragment, useState } from 'react';
 
 import { ALGEBRAIC_COLUMN_NAMES, ALGEBRAIC_ROW_NAMES } from './constants';
-import { getPieceCode, invertArray, invertString } from './utils';
+import { getPieceCode, invertString, isWhitePerspective } from './utils';
 import Button from './components/button';
+import NotationBar from './components/notation-bar';
 
 // const sampleFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
@@ -21,17 +22,8 @@ import Button from './components/button';
 function ChessBoard(props) {
    const { fen, marks, perspective } = props;
    const [localPerspective, setLocalPerspective] = useState(perspective);
-   const isWhitePerspective = localPerspective === 'w';
-
-   let uiFen = fen;
-   let uiAlgebraicRowNames = ALGEBRAIC_ROW_NAMES;
-   let uiAlgebraicColumnNames = ALGEBRAIC_COLUMN_NAMES;
-
-   if (!isWhitePerspective) {
-      uiFen = invertString(fen);
-      uiAlgebraicColumnNames = invertArray(ALGEBRAIC_COLUMN_NAMES);
-      uiAlgebraicRowNames = invertArray(ALGEBRAIC_ROW_NAMES);
-   }
+   const viewAsWhite = isWhitePerspective(localPerspective);
+   const uiFen = viewAsWhite ? fen : invertString(fen);
    const rows = uiFen.split('/');
    console.log(marks);
 
@@ -39,7 +31,7 @@ function ChessBoard(props) {
       <Fragment>
          <Button
             onClick={() => {
-               setLocalPerspective(localPerspective === 'w' ? 'b' : 'w');
+               setLocalPerspective(viewAsWhite ? 'b' : 'w');
             }}
          >
             {'Rotate'}
@@ -55,54 +47,19 @@ function ChessBoard(props) {
                borderRadius: 10
             }}
          >
-            <div
-               style={{
-                  left: 0,
-                  position: 'absolute',
-                  top: (300 / 100) * 5,
-                  bottom: (300 / 100) * 5,
-                  width: (300 / 100) * 5
-               }}
-            >
-               <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  {uiAlgebraicRowNames.map(number => (
-                     <div
-                        style={{
-                           flex: 1,
-                           justifyContent: 'center',
-                           display: 'flex',
-                           alignItems: 'center'
-                        }}
-                     >
-                        <span style={{ color: 'white', fontSize: '75%' }}>{number}</span>
-                     </div>
-                  ))}
-               </div>
-            </div>
-            <div
-               style={{
-                  bottom: 0,
-                  position: 'absolute',
-                  right: (300 / 100) * 5,
-                  left: (300 / 100) * 5,
-                  height: (300 / 100) * 5
-               }}
-            >
-               <div style={{ height: '100%', display: 'flex', flexDirection: 'row' }}>
-                  {uiAlgebraicColumnNames.map(letter => (
-                     <div
-                        style={{
-                           flex: 1,
-                           justifyContent: 'center',
-                           display: 'flex',
-                           alignItems: 'center'
-                        }}
-                     >
-                        <span style={{ color: 'white', fontSize: '75%' }}>{letter}</span>
-                     </div>
-                  ))}
-               </div>
-            </div>
+            <NotationBar
+               anchor={(300 / 100) * 5}
+               direction="v"
+               list={ALGEBRAIC_ROW_NAMES}
+               perspective={localPerspective}
+            />
+            <NotationBar
+               anchor={(300 / 100) * 5}
+               direction="h"
+               list={ALGEBRAIC_COLUMN_NAMES}
+               perspective={localPerspective}
+            />
+
             <div
                style={{
                   height: '100%',
@@ -177,8 +134,4 @@ ChessBoard.defaultProps = {
    perspective: 'w'
 };
 
-// const cellStyle = {
-//    backgroundColor: 'black'
-// };
-// basically invert colors is to invert the fen (position)
 export default ChessBoard;

@@ -29,6 +29,14 @@ export function getPieceCode(letter) {
    }
 }
 
+export function isWhitePerspective(perspective) {
+   return perspective === 'w';
+}
+
+export function isVertical(direction) {
+   return direction === 'v';
+}
+
 export function invertString(str) {
    return str
       .split('')
