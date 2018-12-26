@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { getInvertedArray, isVertical, isWhitePerspective } from '../utils';
+import { getInvertedArray, isVertical, isWhitePerspective } from '../../utils';
 
 function getContainerStyle(anchor, direction) {
    return isVertical(direction)

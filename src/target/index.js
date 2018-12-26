@@ -1,8 +1,7 @@
-// import { css } from 'aphrodite';
+import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
 import React, { Fragment, useState } from 'react';
 
-import { ALGEBRAIC_COLUMN_NAMES, ALGEBRAIC_ROW_NAMES } from './constants';
 import {
    getCellName,
    getInvertedString,
@@ -12,99 +11,43 @@ import {
    isWhitePerspective
 } from './utils';
 import Button from './components/button';
-import NotationBar from './components/notation-bar';
+import BoardFrame from './components/board-frame';
 
-// const sampleFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-
-// function fenInterpreter(fen) {
-//    const array = fen.split('');
-//    const position = array[0];
-//    const turn = array[1];
-//    const castles = array[2];
-//    const enPassant = array[3];
-//    const halfMoveCounter = array[4]; // Since the last pawn move - helps to determine if it is draw consequence of the fifty moves rule
-//    const fullMoveConuter = array[5];
-// }
-
-function ChessBoard(props) {
-   const { fen, marks, perspective } = props;
+function GncChess(props) {
+   const { fenPos, marks, perspective } = props;
    const [localPerspective, setLocalPerspective] = useState(perspective);
    const viewAsWhite = isWhitePerspective(localPerspective);
-   const uiFen = viewAsWhite ? getUIFen(fen) : getInvertedString(getUIFen(fen));
+   const uiFen = viewAsWhite ? getUIFen(fenPos) : getInvertedString(getUIFen(fenPos));
    const rows = uiFen.split('/');
    console.log(marks);
-
+   // include frame should be a prop.
    return (
       <Fragment>
-         <Button
+         {/* <Button
             onClick={() => {
                setLocalPerspective(viewAsWhite ? 'b' : 'w');
             }}
          >
             {'Rotate'}
-         </Button>
+         </Button> */}
 
-         <div
-            style={{
-               height: 150,
-               width: 150,
-               padding: (150 / 100) * 5,
-               backgroundColor: '#582006',
-               position: 'relative',
-               borderRadius: 10
-            }}
-         >
-            <NotationBar
-               anchor={(150 / 100) * 5}
-               direction="v"
-               list={ALGEBRAIC_ROW_NAMES}
-               perspective={localPerspective}
-            />
-            <NotationBar
-               anchor={(150 / 100) * 5}
-               direction="h"
-               list={ALGEBRAIC_COLUMN_NAMES}
-               perspective={localPerspective}
-            />
-
-            <div
-               style={{
-                  height: '100%',
-                  width: '100%'
-               }}
-            >
+         <BoardFrame anchor={(150 / 100) * 5} perspective={localPerspective}>
+            <div className={css(styles.container)}>
                {rows.map((row, i) => {
                   const cells = row.split('');
                   return (
-                     <div
-                        key={getRowName(i)}
-                        style={{
-                           display: 'flex',
-                           height: '12.5%'
-                        }}
-                     >
+                     <div key={getRowName(i)} className={css(styles.rowContainer)}>
                         {cells.map((cell, j) => {
                            const isWhite = (i + j) % 2 === 0;
                            return (
                               <div
                                  key={getCellName(i, j)}
+                                 className={css(styles.cellContainer)}
                                  style={{
-                                    flex: 1,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
                                     backgroundColor: isWhite ? '#EBECCE' : '#6C8D51'
                                  }}
                               >
-                                 <span
-                                    style={{
-                                       cursor: 'pointer',
-                                       fontSize: '100%',
-                                       userSelect: 'none'
-                                    }}
-                                 >
-                                    {getPieceCode(cell)}
-                                 </span>
+                                 <span className={css(styles.cellText)}>{getPieceCode(cell)}</span>
                               </div>
                            );
                         })}
@@ -112,13 +55,35 @@ function ChessBoard(props) {
                   );
                })}
             </div>
-         </div>
+         </BoardFrame>
       </Fragment>
    );
 }
 
-ChessBoard.propTypes = {
-   fen: PropTypes.string,
+const styles = StyleSheet.create({
+   container: {
+      height: '100%',
+      width: '100%'
+   },
+   rowContainer: {
+      display: 'flex',
+      height: '12.5%'
+   },
+   cellContainer: {
+      alignItems: 'center',
+      display: 'flex',
+      flex: 1,
+      justifyContent: 'center'
+   },
+   cellText: {
+      cursor: 'pointer',
+      fontSize: '100%',
+      userSelect: 'none'
+   }
+});
+
+GncChess.propTypes = {
+   fenPos: PropTypes.string,
    marks: PropTypes.arrayOf(
       PropTypes.shape({
          cell: PropTypes.string,
@@ -128,11 +93,11 @@ ChessBoard.propTypes = {
    // move: PropTypes.func,
    perspective: PropTypes.oneOf(['w', 'b'])
 };
-ChessBoard.defaultProps = {
-   fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
+GncChess.defaultProps = {
+   fenPos: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
    marks: [],
    // move() {}, // pass move
    perspective: 'w'
 };
 
-export default ChessBoard;
+export default GncChess;

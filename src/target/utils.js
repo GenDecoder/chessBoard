@@ -1,3 +1,5 @@
+import { classic, modern } from './themes';
+
 export function getPieceCode(letter) {
    switch (letter) {
       case 'K':
@@ -66,4 +68,15 @@ export function getUIFen(str) {
          reulst + (Number.isInteger(Number(value)) ? '0'.repeat(Number(value)) : value), // Convert numbers to zeros. Zeros represent empty cells.
       ''
    );
+}
+
+export function getTheme(str) {
+   switch (str) {
+      case 'classic':
+         return classic;
+      case 'modern':
+         return modern;
+      default:
+         return classic;
+   }
 }
